@@ -103,4 +103,4 @@ async def skip(ctx):
 
 
 
-client.run("TOKEN")
+client.run(os.environ.get('TOKEN'))
