@@ -19,6 +19,24 @@ def check_queue(id):
         players.start()
 
 
+#chat_filter  = ("CHAT", "CHAT1")
+#bypass_list = ()
+
+#@client.event
+#async def on_message(message) :
+    #await client.process_commands(message)
+    #contents = message.content.split(" ")
+    #for word in contents:
+        #if word.upper() in chat_filter:
+            #if not message.author.id in bypass_list:
+                #try:
+                    #await client.delete_message(message)
+                    #await client.send_message(message.channel, " :eyes: **HÉKÁS** Te nem beszélhetsz így, mivel az nem szép dolog! Ha nem hagyod abba a csúnya szavak használatát, mute-ot is kaphatsz! :angry:")
+                #except discord.errors.NotFound:
+                    #return
+
+
+
 Client = discord.Client() 
 client = commands.Bot(command_prefix = "!")
 
@@ -29,14 +47,14 @@ async def meghivó(ctx):
 @client.event
 async def on_ready():
     print("Ez a bot készen áll a használatra")
-    print("A bot jelenlegi verziója: beta1")
+    print("A bot jelenlegi verziója: v1")
     print("Nev: " + client.user.name)
     print ("ID: " + client.user.id)
     counter = 0
     while not counter > 0:
-        await client.change_presence(game=discord.Game(name='Parancsokért: !parancsok', type=3))
+        await client.change_presence(game=discord.Game(name='Parancsokért: !help', type=3))
         await asyncio.sleep(5)
-        await client.change_presence(game=discord.Game(name='A bot jelenlegi verziója: beta1', type=3))
+        await client.change_presence(game=discord.Game(name='A bot jelenlegi verziója: v1', type=3))
         await asyncio.sleep(5)
         await client.change_presence(game=discord.Game(name='Support server: Marcell125 server.', type=3))
         await asyncio.sleep(5) 
@@ -61,13 +79,16 @@ async def kilépés(ctx):
 
 @client.command(pass_context=True)
 async def play(ctx, url):
-    server = ctx.message.server
-    voice_client = client.voice_client_in(server)
-    player = await voice_client.create_ytdl_player(url, after=lambda: check_queue(server.id))
-    players[server.id] = player
-    await client.say("A zene azonnal indul!")
-    player.start()
-    
+    try:
+        server = ctx.message.server
+        voice_client = client.voice_client_in(server)
+        player = await voice_client.create_ytdl_player("ytsearch: {}".format(url), before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5")
+        players[server.id] = player
+        await client.say("A zene azonnal indul!")
+        player.start()
+    except discord.errors.ConnectionClosed:
+        return    
+
 
 
 @client.command(pass_context=True)
@@ -99,8 +120,70 @@ async def skip(ctx):
         players[id].stop()
     except:
         return False
-
-
+		
+@client.command(pass_context=True)
+async def playlist(ctx, aliases=['p', 'start']):
+    await client.say("Kérlek várj, indítom az első zenét! :musical_note: ")
+    await client.say("A jelenlegi zene: [SFM FNAF] STAY CALM - FNaF Song by Griffinilla (2018 REMAKE)")
+    try:
+        server = ctx.message.server
+        url = "https://www.youtube.com/watch?v=fUSJxnRzTQY"
+        voice_client = client.voice_client_in(server)
+        player = await voice_client.create_ytdl_player(url)
+        players[server.id] = player
+        player.start()
+        await client.say("Szép napot kívánok {}!".format(ctx.message.author.mention))
+    except:
+        await client.say("Hiba történt! Kérlek próbáld meg a *modkilépés* parancsot, majd a *modbelépés* parancsot! :x:")
+        playlist.cancel()
+    while not player.is_done():
+        await asyncio.sleep(1)
+    await client.say("Kérlek várj, indítom a következő zenét! :musical_note: ")
+    await client.say("A jelenlegi zene: The Chainsmokers - Don't Let Me Down - Launchpad Cover")
+    try:
+        server = ctx.message.server
+        url = "https://www.youtube.com/watch?v=_xK1Rb4xUPE"
+        voice_client = client.voice_client_in(server)
+        player = await voice_client.create_ytdl_player(url)
+        players[server.id] = player
+        player.start()
+        await client.say("Azonnal indul! :thumbsup:")
+    except:
+        await client.say("Hiba történt! Kérlek próbáld meg a *modkilépés* parancsot, majd a *modbelépés* parancsot! :x:")
+        playlist.cancel()
+    while not player.is_done():
+        await asyncio.sleep(1)
+    await client.say("Kérlek várj, indítom a következő zenét! :musical_note: ")
+    await client.say("A jelenlegi zene: SZABYEST - SZERELEM KELL – HIVATALOS VIDEOKLIP – 2016")
+    try:
+        server = ctx.message.server
+        url = "https://www.youtube.com/watch?v=ntGx-pHNL2Y"
+        voice_client = client.voice_client_in(server)
+        player = await voice_client.create_ytdl_player(url)
+        players[server.id] = player
+        player.start()
+        await client.say("Azonnal indul! :thumbsup:")
+    except:
+        await client.say("Hiba történt! Kérlek próbáld meg a *modkilépés* parancsot, majd a *modbelépés* parancsot! :x:")
+        playlist.cancel()
+    while not player.is_done():
+        await asyncio.sleep(1) 
+    await client.say("Kérlek várj, indítom a következő zenét! :musical_note: ")
+    await client.say("A jelenlegi zene: MISSH feat. RAUL & HORVÁTH TAMÁS - BELÉD ESTEM (Official Music Video)")
+    try:
+        server = ctx.message.server
+        url = "https://www.youtube.com/watch?v=520LNy1n5XU"
+        voice_client = client.voice_client_in(server)
+        player = await voice_client.create_ytdl_player(url)
+        players[server.id] = player
+        player.start()
+        await client.say("Azonnal indul! :thumbsup:")
+    except:
+        await client.say("Hiba történt! Kérlek próbáld meg a *modkilépés* parancsot, majd a *modbelépés* parancsot! :x:")
+        playlist.cancel()
+    while not player.is_done():
+        await asyncio.sleep(1)                  
+    await client.say("Ennek vége köszi hogy meghalgatál remélem tetszetek a zenék")
 
 
 client.run(os.environ.get('TOKEN'))
